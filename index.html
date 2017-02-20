@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <script src="js/jquery.js"></script>
+    <style type="text/css">
+        @font-face {
+         font-family: 'fontNameRegular';
+         src: local('fangzheng Regular'), 
+                      local('fangzheng'), 
+                      url('./font/fangzheng.ttf') format('truetype');
+        } 
+        #main{font-family:'fontNameRegular';}
+    </style>
+</head>
+<body>
+
+    <div style="display:none">
+        <img id="starImg" style="height:100%; width:100%;" src="/Users/liuning/work/wwwroot/invitation/img/background_phrase.png"/>
+    </div>
+    <canvas id="main" height="300" width="580" style="border:1px solid #d3d3d3;"></canvas>
+    <input type="text" id="desc" onblur="hechen()" value="" />
+    <button onclick="saveImageInfo()">生成图片</button>
+<script>
+    $(function(){
+        hechen();
+    });
+
+    function hechen(){
+        var mainCtx = getCanvasContext('main');
+        var maxWidth = mainCtx.width;
+        var maxHeight = mainCtx.height;
+        mainCtx.clearRect(0,0,600,600);
+        //因为没法直接读取本地图片 所以做了这部操作
+
+        var starImg = new Image();
+        // starImg.setAttribute('crossOrigin', 'anonymous');
+        // starImg.src=$('#starImg').attr('src');
+        starImg.src='./img/background_phrase.png';
+
+        starImg.onload=function(){
+            //先把图片绘制在这里
+            mainCtx.drawImage(starImg,0,0,580,300);
+            //读取用户的文本
+            if($('#desc').val()){
+                mainCtx.fillStyle = "black";
+                mainCtx.font="85px fontNameRegular";
+                mainCtx.fillText($('#desc').val().charAt(0),35,210);
+                mainCtx.fillText($('#desc').val().charAt(1),178,210);
+                mainCtx.fillText($('#desc').val().charAt(2),322,210);
+                mainCtx.fillText($('#desc').val().charAt(3),465,210);
+            }
+        }
+    }
+
+    function getCanvasContext(id){
+        return document.getElementById(id).getContext("2d");
+    }
+
+    function saveImageInfo() {
+        var mycanvas = document.getElementById("main");
+        var image = mycanvas.toDataURL("image/png");
+        var w=window.open('about:blank','image from canvas');
+        w.document.write("<img src='"+image+"'/>");
+    }
+
+    function saveAsLocalImage(){
+        var myCanvas = document.getElementById("main");
+        var image = myCanvas.toDataURL("image/png").replace("image/jpg", "image/octet-stream");
+        window.location.href=image;
+    }
+
+</script>
+
+</body>
+</html>
